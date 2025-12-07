@@ -1,5 +1,6 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <sys/socket.h>
 
@@ -14,7 +15,7 @@ int main() {
   struct sockaddr_in address;
 
   address.sin_family = AF_INET;
-  address.sin_port = htons(2000);
+  address.sin_port = htons(port_number);
   inet_pton(
       AF_INET, server_ip,
       &address.sin_addr.s_addr); // convert ipv4 address to network convention
@@ -33,9 +34,15 @@ int main() {
   char
       buffer[1024]; // hold up to 1024 ASCII characters, less than 1024 in utf-8
 
-  recv(client_socket_fd, buffer, 1024, 0);
+  while (true) {
 
-  printf("Response was:\n%s", buffer);
+    ssize_t amount_recieved = recv(client_socket_fd, buffer, 1024, 0);
+
+    if (amount_recieved > 0) {
+      buffer[amount_recieved] = 0;
+      printf("%s", buffer);
+    }
+  }
 
   return 0;
 }
