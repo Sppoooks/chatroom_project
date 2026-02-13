@@ -5,6 +5,8 @@
 #include <string.h>
 #include <sys/socket.h>
 
+#define buffer_size 1024
+
 int main() {
   int client_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -38,15 +40,14 @@ int main() {
       if (strcmp(line, "exit\n") == 0) {
         break;
       }
+      else {
+        ssize_t amount_was_sent = send(client_socket_fd, line, charCount, 0);
+      }
 
-      ssize_t amount_was_sent = send(client_socket_fd, line, charCount, 0);
     }
   }
 
-  char buffer[1024];
-  recv(client_socket_fd, buffer, 1024, 0);
-
-  printf("Response was:\n%s\n", buffer);
+  printf("Disconnected from server\n");
 
   return 0;
 }

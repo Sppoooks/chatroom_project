@@ -35,7 +35,7 @@ int main(void) {
   listen(server_socket_fd,
          10); // marks server_socket as a passive listening socket
 
-  struct pollfd fds[MAX_CLIENTS + 1];
+  struct pollfd fds[MAX_CLIENTS + 1]; // +1 to account for listening socket
   fds[0].fd = server_socket_fd;
   fds[0].events = POLLIN;
 
@@ -59,7 +59,7 @@ int main(void) {
           fds[nfds].events = POLLIN;
           nfds++;
 
-          printf("New client connected\n");
+          printf("New client %d connected\n", client_fd);
         }
       else {
           char buffer[buffer_size];
@@ -70,6 +70,9 @@ int main(void) {
 
             printf("Client %d disconnected\n", fds[i].fd);
             close(fds[i].fd);
+
+            fds[i] = fds[nfds - 1];
+            nfds --;
           }
           else {
             buffer[bytes] = '\0';
