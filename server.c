@@ -9,6 +9,7 @@
 
 #define port 9999
 #define MAX_CLIENTS 100
+#define buffer_size 1024
 
 int main(void) {
 
@@ -61,8 +62,9 @@ int main(void) {
           printf("New client connected\n");
         }
       else {
-          char buffer[1024];
-          int bytes = read(fds[i].fd, buffer, sizeof(buffer));
+          char buffer[buffer_size];
+
+          int bytes = read(fds[i].fd, buffer, sizeof(buffer) - 1);
 
           if (bytes <= 0) {
 
@@ -70,7 +72,7 @@ int main(void) {
             close(fds[i].fd);
           }
           else {
-            buffer[bytes] = '/0';
+            buffer[bytes] = '\0';
 
             printf("%s", buffer);
           }
