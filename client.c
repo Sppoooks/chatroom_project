@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <stdlib.h>
 
 #define buffer_size 1024
 
@@ -24,10 +25,13 @@ int main() {
 
   int result =
       connect(client_socket_fd, (struct sockaddr *)&address, sizeof(address));
-  if (result == 0)
-    printf("Connection was successful\n");
-  else
-    printf("Connection was unsuccessful\n");
+  if (result == 0) {
+    printf("Connection to server successful\n");
+  }
+  else {
+    printf("Connection unsucessfull, could not connect to server\n");
+    exit(0);
+  }
 
   char *line = NULL;
   size_t size = 0;
